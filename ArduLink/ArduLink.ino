@@ -10,7 +10,7 @@
  * 	Timeout:		10
  *
  * In "Serial Receive"
- *  Header: 
+ *  Header: 		L
  *  Terminator:		NULL ('\0')
  *  Data size:		[8 1]
  *  Data type:		int32 or single
@@ -24,7 +24,7 @@ ArduLink simulink;
 
 void setup() 
 {
-	simulink.Init(9600,8); //baudrate=9600,vector size = 8 ([8 1])
+	simulink.Init(9600,8,'L',"\0"); //baudrate=9600,vector size = 8 ([8 1]),Terminator '\0'
 }
 
 void loop()
@@ -35,7 +35,7 @@ void loop()
 	// 0 - send int32 example
 	// 1 - send float (single) example
 
-	#if 0 
+	#if 1
 		simulink.SendBuffer(patrick); //send buffer
 	#else
 		simulink.SendBuffer(patrick2); //send buffer

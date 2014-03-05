@@ -7,40 +7,74 @@
 class ArduLink
 {
 	private:
+		char* Terminator;
+		char Header;
 		char buffer[4];		//Buffer 8 bits
 		int vector_size;	//Vector size
 
 		char char2hex(char x);
 		void serialFloatPrint(float f); 
+		void sendTerminator();
+		void sendHeader();
 	public:
-		void Init(int baudrate,int size);	// start the class  (baudrate , vector size)
-		void SendBuffer(int* vector); 		// send buffer to simulink
-		void SendBuffer(float* vector); 		
+		// start the class  (baudrate , vector size)
+		void Init(int baudrate, int size);	
+		void Init(int baudrate, int size, char* term);	
+		void Init(int baudrate, int size, char head, char* term);
+
+		//send buffer to simulink
+		///int32
 		void SendBuffer(int vector);
+		void SendBuffer(int* vector); 
+		
+		///single
 		void SendBuffer(float vector);
+		void SendBuffer(float* vector); 		
 };
 
-void ArduLink::Init(int baudrate,int size)	
+void ArduLink::Init(int baudrate, int size)	
 {
 	vector_size=size;
+	Header=0x00;
+	Terminator="\0";
+	Serial.begin(baudrate);
+};
+
+void ArduLink::Init(int baudrate, int size,char* term)	
+{
+	vector_size=size;
+	Header=0x00;
+	Terminator=term;
+	Serial.begin(baudrate);
+};
+
+void ArduLink::Init(int baudrate, int size, char head, char* term)	
+{
+	vector_size=size;
+	Header=head;
+	Terminator=term;
 	Serial.begin(baudrate);
 };
 
 void ArduLink::SendBuffer(float* vector)
 {
+	sendHeader();
 	for (int u = 0; u < vector_size; ++u)
 		serialFloatPrint(vector[u]);
-	Serial.write("\0");
+	sendTerminator();
 };
 
 void ArduLink::SendBuffer(float vector)
 {
+	sendHeader();
 	serialFloatPrint(vector);	
-	Serial.write("\0");
+	sendTerminator();
 };
 
 void ArduLink::SendBuffer(int* vector)
 {
+	sendHeader();
+
 	for (int u = 0; u < vector_size; ++u)
 	{
 		buffer[0]=vector[u];
@@ -51,11 +85,13 @@ void ArduLink::SendBuffer(int* vector)
 		for (int i = 0; i < 4; ++i)
 			Serial.write(buffer[i]);
 	}
-	Serial.write("\0");
+	sendTerminator();
 };
 
 void ArduLink::SendBuffer(int vector)
 {
+	sendHeader();
+
 	buffer[0]=vector;
 	buffer[1]=vector>>8;
 	buffer[2]=vector>>16;
@@ -64,7 +100,7 @@ void ArduLink::SendBuffer(int vector)
 	for (int i = 0; i < 4; ++i)
 		Serial.write(buffer[i]);
 
-	Serial.write("\0");
+	sendTerminator();
 };
 
 char ArduLink::char2hex(char x)
@@ -129,4 +165,15 @@ void ArduLink::serialFloatPrint(float f)
 {
 	byte * b = (byte *) &f;
   	Serial.write(b,4);
+}
+
+void ArduLink::sendTerminator()
+{
+	Serial.write(Terminator);	
+}
+
+void ArduLink::sendHeader()
+{
+	if(Header!=0x00)
+		Serial.write(Header);	
 }
