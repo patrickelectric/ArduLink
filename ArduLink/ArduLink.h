@@ -34,37 +34,3 @@ void ArduLink::SendBuffer(int* vector)
 	}
 	Serial.write("\0");
 };
-
-
-	/*
-	//int 32 bits [2 1]
-	//[10 0]
-	//[-10 6]
-	//10
-	Serial.write(0x0A); //lsb1
-	Serial.write(0x00); //lsb2
-	Serial.write(0x00); //msb1 
-	Serial.write(0x00); //msb2 
-	delay(10);
-
-	//-10
-	Serial.write(0xF6); //lsb1
-	Serial.write(0xFF); //lsb2 
-	Serial.write(0xFF); //msb1 
-	Serial.write(0xFF); //msb2 
-	delay(10);
-
-	//0
-	Serial.write(0x00); //lsb1
-	Serial.write(0x00); //lsb2
-	Serial.write(0x00); //msb1 
-	Serial.write(0x00); //msb2 
-	delay(10);
-
-	//-6
-	Serial.write(0xFA); //lsb1
-	Serial.write(0xFF); //lsb2 
-	Serial.write(0xFF); //msb1 
-	Serial.write(0xFF); //msb2 
-	delay(10)
-	*/
