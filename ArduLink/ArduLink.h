@@ -2,21 +2,22 @@
 
 //Terminator NULL
 //Data Size ["Vector size" 1]
+
+//Byte order BigEndian
 class ArduLink
 {
 	private:
 		char buffer[4];		//Buffer 8 bits
 		int vector_size;	//Vector size
 
+		char char2hex(char x);
+		void serialFloatPrint(float f); 
 	public:
 		void Init(int baudrate,int size);	// start the class  (baudrate , vector size)
 		void SendBuffer(int* vector); 		// send buffer to simulink
-		void SendBuffer2(float* vector); 		
+		void SendBuffer(float* vector); 		
 		void SendBuffer(int vector);
 		void SendBuffer(float vector);
-		//tests
-		char char2hex(char x);
-		void serialFloatPrint(float f); 
 };
 
 void ArduLink::Init(int baudrate,int size)	
@@ -25,12 +26,10 @@ void ArduLink::Init(int baudrate,int size)
 	Serial.begin(baudrate);
 };
 
-void ArduLink::SendBuffer2(float* vector)
+void ArduLink::SendBuffer(float* vector)
 {
 	for (int u = 0; u < vector_size; ++u)
-	{
 		serialFloatPrint(vector[u]);
-	}
 	Serial.write("\0");
 };
 
@@ -50,9 +49,7 @@ void ArduLink::SendBuffer(int* vector)
 		buffer[3]=vector[u]>>24;
 
 		for (int i = 0; i < 4; ++i)
-		{
 			Serial.write(buffer[i]);
-		}
 	}
 	Serial.write("\0");
 };
@@ -65,9 +62,7 @@ void ArduLink::SendBuffer(int vector)
 	buffer[3]=vector>>24;
 
 	for (int i = 0; i < 4; ++i)
-	{
 		Serial.write(buffer[i]);
-	}
 
 	Serial.write("\0");
 };
@@ -129,6 +124,7 @@ char ArduLink::char2hex(char x)
 }
 
 //http://forum.arduino.cc/index.php?topic=112597.0
+//BigEndian
 void ArduLink::serialFloatPrint(float f) 
 {
 	byte * b = (byte *) &f;
