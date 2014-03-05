@@ -26,7 +26,7 @@ void loop()
 	//Serial.print(0.1742,BIN);
 	serialFloatPrint(1.32);
 	Serial.write("\0");
-	delay(1000);
+	delay(10);
 }
 
 // http://stackoverflow.com/questions/4315190/single-precision-big-endian-float-values-to-pythons-float-double-precision-bi
@@ -35,7 +35,8 @@ void serialFloatPrint(float f)
 
 	byte * b = (byte *) &f;
 	char vector[8];
-	Serial.print("f:");
+	char vector2[4];
+	//Serial.print("f:");
 	for(int i=0; i<4; i++) 
 	{
 		byte b1 = (b[i] >> 4) & 0x0f;
@@ -48,8 +49,23 @@ void serialFloatPrint(float f)
 		vector[7-i*2]=c2;
 		vector[6-i*2]=c1;
 	}
+	//Serial.print(vector[0]); //msb
 	for(int i=0; i<8; i++)
-		Serial.write(vector[i]);
+	{
+		vector[i]=char2hex(vector[i]);
+	}
+	//Serial.println();
+	for(int i=0; i<4; i++)
+		vector2[3-i]=vector[2*i]<<4+vector[2*i+1];
+	for(int i=0; i<4; i++)
+		vector[2*i]=vector[2*i]<<4;
+	for(int i=0; i<4; i++)
+	{
+		//Serial.println("F:");
+		//Serial.println((byte)vector[7-2*i-1],HEX);
+		//Serial.println((byte)vector[7-2*i],HEX);
+		Serial.write((byte)(vector[7-2*i-1]+vector[7-2*i]));
+	}
 	//Serial.println();
 }
 
@@ -58,37 +74,37 @@ char char2hex(char x)
 	switch (x) 
 	{
     case '0':
-      return 0;
+      return 0x00;
       break;
     case '1':
-      return 1;
+      return 0x01;
       break;
     case '2':
-      return 2;
+      return 0x02;
       break;
     case '3':
-      return 3;
+      return 0x03;
       break;
     case '4':
-      return 5;
+      return 0x05;
       break;
     case '5':
-      return 5;
+      return 0x05;
       break;
     case '6':
-      return 6;
+      return 0x06;
       break;
     case '7':
-      return 7;
+      return 0x07;
       break;
     case '8':
-      return 8;
+      return 0x08;
       break;
     case '9':
-      return 9;
+      return 0x09;
       break;
     case 'A':
-      return 0xA;
+      return 0x0a;
       break;
     case 'B':
       return 0x0b;
