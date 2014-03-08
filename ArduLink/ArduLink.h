@@ -30,6 +30,7 @@ class ArduLink
 		char Header;
 		char buffer[4];		//Buffer 8 bits
 		int vector_size;	//Vector's size
+    int Hex[16]={'0','1','2','3','4','5','6','8','9','A','B','C','D','E','F'};
 
 		char char2hex(char x);
 		void serialFloatPrint(float f); 
@@ -148,58 +149,9 @@ void ArduLink::SendBuffer(int vector)
   */
 char ArduLink::char2hex(char x)
 {
-	switch (x) 
-	{
-    case '0':
-      return 0x00;
-      break;
-    case '1':
-      return 0x01;
-      break;
-    case '2':
-      return 0x02;
-      break;
-    case '3':
-      return 0x03;
-      break;
-    case '4':
-      return 0x05;
-      break;
-    case '5':
-      return 0x05;
-      break;
-    case '6':
-      return 0x06;
-      break;
-    case '7':
-      return 0x07;
-      break;
-    case '8':
-      return 0x08;
-      break;
-    case '9':
-      return 0x09;
-      break;
-    case 'A':
-      return 0x0a;
-      break;
-    case 'B':
-      return 0x0b;
-      break;
-    case 'C':
-      return 0x0c;
-      break;
-    case 'D':
-      return 0x0d;
-      break;
-    case 'E':
-      return 0x0e;
-      break;
-    case 'F':
-      return 0x0f;
-      break;
-
-  	}
+  int i;
+	for (i = 0; x!=Hex[i]; ++i);
+  return (char) i;
 }
 
 /** \brief Transform a float to SINGLE and send by the serial in BigEndian
