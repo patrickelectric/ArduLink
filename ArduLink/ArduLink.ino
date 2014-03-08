@@ -24,7 +24,7 @@ ArduLink simulink;
 
 void setup() 
 {
-	simulink.Init(9600,8,"\0",'L'); //baudrate=9600,vector size = 8 ([8 1]),Terminator '\0'
+	simulink.Init(9600,8,"\0",'L'); //baudrate=9600,vector size = 8 ([8 1]),Terminator '\0',Header L
 }
 
 void loop()
