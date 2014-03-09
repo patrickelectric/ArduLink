@@ -35,10 +35,6 @@ Contributing
 6. Enjoy a good book and wait
 
 [1]: https://github.com/patrickelectric/ArduLink/pulls
-<<<<<<< HEAD
+[2]: https://github.com/patrickelectric/ArduLink/archive/master.zip
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/patrickelectric/ardulink/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
-=======
-[2]: https://github.com/patrickelectric/ArduLink/archive/master.zip
->>>>>>> develop
