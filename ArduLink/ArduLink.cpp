@@ -1,3 +1,17 @@
+/**
+  ******************************************************************************
+  * @file    ArduLink.h
+  * @author  Patrick José Pereira
+  * @version V1.4
+  * @date    9-Março-2014
+  * @brief   A library to make comunication with simulink
+  *
+  * By Default:
+  *		Terminator 		"\0"
+  *		Header  		NONE
+  *
+  ******************************************************************************/
+
 #include <ArduLink.h>
 
 /** \brief Starts the initials values and parameters. 

@@ -1,20 +1,14 @@
-/*
-  ArduLink.h - Library for flashing Morse code.
-  Created by David A. Mellis, November 2, 2007.
-  Released into the public domain.
-*/
-
 /**
   ******************************************************************************
   * @file    ArduLink.h
   * @author  Patrick José Pereira
-  * @version V1.3
+  * @version V1.4
   * @date    5-Março-2014
   * @brief   A library to make comunication with simulink
   *
   * By Default:
   *		Terminator 		"\0"
-  *		Header  		NONE
+  *		Header  	   	NONE
   *
   * Is advisable that after burn the Arduino, restart him befone the Simulink comunication.
   *		
@@ -24,9 +18,7 @@
   * vector's format (int32 or single) changed,  REMEMBER to modifie in the
   * Simulink.
   *
-  * Vector's rows cols= [rows cols] in Simulink.
   *
-  * @Todo Integrate function that send matrices.
   ******************************************************************************/
 #ifndef ArduLink_h
 #define ArduLink_h
