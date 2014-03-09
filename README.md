@@ -17,6 +17,12 @@ Tutorial
 3. The Terminator must be in double quotes (`"\0","\n","\r\n" and...`).
 4. The Header must be in single quotes (`'L','U','P' and...`)
 
+Instalation
+-------
+
+1.[Download][2] the Master branch from gitHub.
+2. Unzip.
+3. Paste the folder on your Library folder (On your @Libraries@ folder inside Sketchbooks or Arduino software).
 
 Contributing
 ------------
@@ -29,3 +35,4 @@ Contributing
 6. Enjoy a good book and wait
 
 [1]: https://github.com/patrickelectric/ArduLink/pulls
+[2]: https://github.com/patrickelectric/ArduLink/archive/master.zip
