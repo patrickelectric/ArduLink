@@ -22,7 +22,7 @@
 #include "ArduLink.h"
 ArduLink simulink;
 
-#define VECTOR 0
+#define VECTOR 1
 #define INT    1
 
 void setup() 
@@ -51,9 +51,6 @@ void loop()
 		   -1, -2, -3, -4
 		};// int matrix
 	#endif
-
-	// 0 - send int32 example
-	// 1 - send float (single) example
 
  	#if VECTOR
 		#if INT
