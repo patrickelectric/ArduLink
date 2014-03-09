@@ -15,14 +15,14 @@ Tutorial
   * Vector's format (int32 or single)
   Need to be modified in Simulink !
 3. The Terminator must be in double quotes (`"\0","\n","\r\n" and...`).
-4. The Header must be in single quotes (`'L','U','P' and...`)
+4. The Header must be in single quotes (`'L','U','P' and...`).
 
 Instalation
--------
+-----------
 
-1.[Download][2] the Master branch from gitHub.
+1. [Download][2] the Master branch from gitHub.
 2. Unzip.
-3. Paste the folder on your Library folder (On your @Libraries@ folder inside Sketchbooks or Arduino software).
+3. Paste the folder on your Library folder (On your `Libraries` folder inside Sketchbooks or Arduino software).
 
 Contributing
 ------------
