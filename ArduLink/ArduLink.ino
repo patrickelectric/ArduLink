@@ -12,7 +12,7 @@
  * In "Serial Receive"
  *  Header: 		L
  *  Terminator:		NULL ('\0')
- *  Data size:		[8 1]
+ *  Data size:		[8 1] or [2 4]
  *  Data type:		int32 or single
  *  Enable blocking mode: 				[x]
  *  Action when data is unavailable: 	Output last received value
@@ -22,24 +22,52 @@
 #include "ArduLink.h"
 ArduLink simulink;
 
+#define VECTOR 0
+#define INT    1
+
 void setup() 
 {
-	simulink.Init(9600,8,"\0",'L'); //baudrate=9600,vector size = 8 ([8 1]),Terminator '\0',Header L
+	#if VECTOR
+		simulink.Init(9600,8,1,"\0",'L'); //baudrate=9600,vector size = 8 ([8 1]),Terminator '\0',Header L
+	#else
+		simulink.Init(9600,2,4,"\0",'L'); //baudrate=9600,vector size = 8 ([8 1]),Terminator '\0',Header L
+	#endif
 }
 
 void loop()
 { 
-	float patrick[]={1.32,1.75,3.1,4.9,5.35,0.09,-1.32,-2.9}; 	// float vector
-	int patrick2[]={1,2,3,4,-1,-2,-3,-4};						// int vector
+	#if VECTOR
+		float float_vector[]={1.32,1.75,3.1,4.9,5.35,0.09,-1.32,-2.9}; 	// float vector
+		int int_vector[]={1,2,3,4,-1,-2,-3,-4};						// int vector
+	#else
+		float float_matrix[]=
+		{
+			1.32,	1.75,	3.1,	4.9,
+			5.35,	0.09,  -1.3,   -2.9
+		};// float matrix
+		int int_matrix[]=
+		{
+			1,	2,	3,	4,
+		   -1, -2, -3, -4
+		};// int matrix
+	#endif
 
 	// 0 - send int32 example
 	// 1 - send float (single) example
 
-	#if 1
-		simulink.SendBuffer(patrick); //send buffer
-	#else
-		simulink.SendBuffer(patrick2); //send buffer
-	#endif
+ 	#if VECTOR
+		#if INT
+			simulink.SendBuffer(int_vector);   //send buffer
+		#else
+			simulink.SendBuffer(float_vector); //send buffer
+		#endif 	
+ 	#else
+ 		#if INT
+			simulink.SendBuffer(int_matrix);   //send buffer
+		#else
+			simulink.SendBuffer(float_matrix); //send buffer
+		#endif 	
+ 	#endif
 
 	delay(10);
 }

@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    ArduLink.h
   * @author  Patrick José Pereira
-  * @version V1.2
+  * @version V1.3
   * @date    5-Março-2014
   * @brief   A library to make comunication with simulink
   *
@@ -14,11 +14,11 @@
   *		
   * The transmission's order of the bytes is BigEndian.
   *
-  * If the Terminator, Header, Baudrate. vector's size and the
+  * If the Terminator, Header, Baudrate. vector's _size and the
   * vector's format (int32 or single) changed,  REMEMBER to modifie in the
   * Simulink.
   *
-  * Vector's size = ['vector's size' 1] in Simulink.
+  * Vector's rows cols= [rows cols] in Simulink.
   *
   * @Todo Integrate function that send matrices.
   ******************************************************************************/
@@ -29,7 +29,8 @@ class ArduLink
 		char* Terminator;
 		char Header;
 		char buffer[4];		//Buffer 8 bits
-		int vector_size;	//Vector's size
+		int cols;			
+		int rows;
     int Hex[16]={'0','1','2','3','4','5','6','8','9','A','B','C','D','E','F'};
 
 		char char2hex(char x);
@@ -37,9 +38,9 @@ class ArduLink
 		void sendTerminator();
 		void sendHeader();
 	public:
-		void Init(int baudrate, int size);	
-		void Init(int baudrate, int size, char* term);	
-		void Init(int baudrate, int size, char* term, char head);
+		void Init(int baudrate, int _cols, int _rows);	
+		void Init(int baudrate, int _cols, int _rows, char* term);	
+		void Init(int baudrate, int _cols, int _rows, char* term, char head);
 
 		//send buffer to simulink
 		///int32
@@ -59,25 +60,28 @@ class ArduLink
   * @param 	head      Define the Simulink's Header
   * @retval NONE
   */
-void ArduLink::Init(int baudrate, int size)	
+void ArduLink::Init(int baudrate, int _cols, int _rows)	
 {
-	vector_size=size;
+	cols=_cols;
+	rows=_rows;
 	Header=0x00;
 	Terminator="\0";
 	Serial.begin(baudrate);
 };
 
-void ArduLink::Init(int baudrate, int size,char* term)	
+void ArduLink::Init(int baudrate, int _cols, int _rows, char* term)	
 {
-	vector_size=size;
+	cols=_cols;
+	rows=_rows;
 	Header=0x00;
 	Terminator=term;
 	Serial.begin(baudrate);
 };
 
-void ArduLink::Init(int baudrate, int size, char* term, char head)	
+void ArduLink::Init(int baudrate, int _cols, int _rows, char* term, char head)	
 {
-	vector_size=size;
+	cols=_cols;
+	rows=_rows;
 	Header=head;
 	Terminator=term;
 	Serial.begin(baudrate);
@@ -92,8 +96,9 @@ void ArduLink::Init(int baudrate, int size, char* term, char head)
 void ArduLink::SendBuffer(float* vector)
 {
 	sendHeader();
-	for (int u = 0; u < vector_size; ++u)
-		serialFloatPrint(vector[u]);
+	for (int i = 0; i < rows; ++i)
+		for (int u = 0; u < cols; ++u)
+		serialFloatPrint(vector[u*rows+i]);
 	sendTerminator();
 };
 
@@ -114,16 +119,17 @@ void ArduLink::SendBuffer(int* vector)
 {
 	sendHeader();
 
-	for (int u = 0; u < vector_size; ++u)
-	{
-		buffer[0]=vector[u];
-		buffer[1]=vector[u]>>8;
-		buffer[2]=vector[u]>>16;
-		buffer[3]=vector[u]>>24;
+	for (int i = 0; i < rows; ++i)
+		for (int u = 0; u < cols; ++u)
+		{
+			buffer[0]=vector[u*rows+i];
+			buffer[1]=vector[u*rows+i]>>8;
+			buffer[2]=vector[u*rows+i]>>16;
+			buffer[3]=vector[u*rows+i]>>24;
 
-		for (int i = 0; i < 4; ++i)
-			Serial.write(buffer[i]);
-	}
+			for (int i = 0; i < 4; ++i)
+				Serial.write(buffer[i]);
+		}
 	sendTerminator();
 };
 
