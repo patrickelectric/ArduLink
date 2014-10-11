@@ -44,15 +44,12 @@ void setup()
 
 void loop()
 {
-  
-  delay(10);
-  Serial.println("--------------");
-  Serial.print("->");
-  Serial.print(Serial.available());
-  Serial.print(" ");
-  Serial.println(char(Serial.peek()));
-  while(Serial.available()==0);
-  while(Serial.peek()=='L' && Serial.available()>36)
+  //Serial.println("--------------");
+  //Serial.print("->");
+  //Serial.println(Serial.available());
+  //Serial.print(" ");
+  //Serial.println(char(Serial.peek()));
+  while(Serial.peek()=='L' && Serial.available()>24)
   {
     Serial.read();
     Serial.println("Start byte !");
@@ -62,9 +59,9 @@ void loop()
     for(i=0; Serial.peek()!='\n'; i++)
       buffer[i]=Serial.read();
     Serial.read();//\n
-    if(i!=36) break;
     Serial.print("S-E = "); Serial.println(i);
     float b;
+    if(i!=24) break;
 
     b=byte2float(buffer);
     Serial.println(b);
@@ -76,13 +73,14 @@ void loop()
       Serial.println(b);
     }
   } 
-  if(Serial.available()>36)
+  if(Serial.available()>24)
     Serial.read();
+  /*
   else
   if((Serial.available()!=0 && Serial.available()<36))
   {
     Serial.println(Serial.read());
-    Serial.flush();
-  }
+    //Serial.flush();
+  }*/
   
 }
