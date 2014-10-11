@@ -33,7 +33,7 @@ class ArduLink
 		char buffer[4];		
 		int cols;			
 		int rows;
-    int Hex[16]={'0','1','2','3','4','5','6','8','9','A','B','C','D','E','F'};
+		int Hex[16]={'0','1','2','3','4','5','6','8','9','A','B','C','D','E','F'};
 
 		char char2hex(char x);
 		void serialFloatPrint(float f); 

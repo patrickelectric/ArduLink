@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <Timer.h>
+#include <CircularBuffer.h>
  
 // exemplo funcional
 // matrix 3x3
@@ -28,97 +29,56 @@ float byte2float(byte* buffer)
 */
 
 SoftwareSerial soSerial(10, 11); // RX, TX
-
-class Ring
-{
-  private:
-    static const int maxSize=256;
-    volatile byte buffer[maxSize];
-    unsigned char starti;
-    unsigned char endi;
-    bool empty;
-  public:
-    Ring()
-    {
-      empty=endi=starti=0;
-    };
-
-    void add(byte inChar);
-    byte read();
-    unsigned int avaiable();
-    byte peek(unsigned int);
-    byte peek();
-    void update();
-} Buffer;
-
-void Ring::add(byte inChar)
-{
-  buffer[endi]=inChar;
-  if(starti==endi+1)
-    starti++;
-  else
-    empty=0;
-  endi++;
-}
-
-byte Ring::read()
-{
-  byte temp=buffer[starti];
-  if(starti!=endi)
-    starti++;
-  else
-    empty=1;
-  return temp;
-}
-
-unsigned int Ring::avaiable()
-{
-  if(empty==1)
-    return 0;
-  else 
-    return (endi-starti);
-}
-
-byte Ring::peek(unsigned int id)
-{
-  return buffer[id];
-}
-
-byte Ring::peek()
-{
-  return buffer[starti];
-}
-
-void Ring::update()
-{
-  
-}
-
+CircularBuffer Buffer;
 Timer t;
+
+
+void dataAnalize()
+{
+  int row=2,colun=3;
+  int type=4; //int32
+  while(Buffer.avaiable()!=0)
+  {
+    for(int i=0; i<Buffer.avaiable() && Buffer.avaiable()!=0; i++)
+    {
+      if(Buffer.peek(i)=='L' && Buffer.peek(i+type*row*colun+1)=='\n')
+      { 
+        while(Buffer.peek()!='L' && Buffer.avaiable()!= 0)
+          Buffer.read();
+        Buffer.read();
+
+        if(1) //int
+          for(int k=0; k<6; k++)
+          {
+            int inbyte[4];
+            inbyte[0]=(int)Buffer.read();//msb
+            inbyte[1]=(int)Buffer.read();//msb
+            inbyte[2]=(int)Buffer.read();//msb
+            inbyte[3]=(int)Buffer.read();//msb
+            int temp;
+            temp=(inbyte[3]<<24)+(inbyte[2]<<16)+(inbyte[1]<<8)+inbyte[0];
+            soSerial.println(temp);
+          }
+        
+        soSerial.println("AEAEAEA");
+      }
+    }
+  }
+}
+
 
 void setup()
 {
   soSerial.begin(115200);
   Serial.begin(9600);
-  t.every(1000, printData);
+  //t.every(1000, printData);
+  t.every(100, dataAnalize);
   soSerial.println(">------------<");
 }
 
 void loop()
 {
   t.update();
-}
-
-void printData()
-{
-  if(Buffer.avaiable()!=0)
-    soSerial.println("New:");
-
-  while(Buffer.avaiable()!=0)
-  {
-    soSerial.print("- ");
-    soSerial.println(Buffer.read(),HEX); 
-  }
 }
 
 void serialEvent()
